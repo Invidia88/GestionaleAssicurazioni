@@ -2,6 +2,23 @@
 
 ## 2026-07-08
 
+- Modernizzata la grafica generale con sidebar scura, topbar più pulita, card con ombre leggere e form/tabelle più rifiniti.
+- Aggiornata la schermata di login con branding dedicato e testi in italiano.
+- Rifinita la dashboard con metriche più leggibili, badge e link rapidi.
+
+File principali modificati:
+
+- `resources/css/app.css`
+- `resources/js/Layouts/AuthenticatedLayout.vue`
+- `resources/js/Layouts/GuestLayout.vue`
+- `resources/js/Pages/Auth/Login.vue`
+- `resources/js/Pages/Dashboard.vue`
+- `resources/js/Components/PrimaryButton.vue`
+- `resources/js/Components/TextInput.vue`
+- `resources/js/Components/StatusBadge.vue`
+
+## 2026-07-08
+
 - Creato progetto Laravel 12 con Breeze, Vue 3, Inertia e Tailwind.
 - Configurata autenticazione con pagine protette.
 - Aggiunte migration per `clients`, `insurance_companies` e `policies`.
