@@ -11,6 +11,7 @@ const loading = ref(true);
 const saving = ref(false);
 const error = ref('');
 const editingId = ref(null);
+const showForm = ref(false);
 
 const form = reactive({
     name: '',
@@ -22,6 +23,7 @@ const form = reactive({
 
 const resetForm = () => {
     editingId.value = null;
+    showForm.value = false;
     Object.assign(form, {
         name: '',
         contact_name: '',
@@ -29,6 +31,11 @@ const resetForm = () => {
         contact_email: '',
         notes: '',
     });
+};
+
+const openCreateForm = () => {
+    resetForm();
+    showForm.value = true;
 };
 
 const load = async () => {
@@ -62,6 +69,7 @@ const filteredCompanies = computed(() => {
 
 const edit = (company) => {
     editingId.value = company.id;
+    showForm.value = true;
     Object.assign(form, {
         name: company.name ?? '',
         contact_name: company.contact_name ?? '',
@@ -108,12 +116,17 @@ const remove = async (company) => {
                 <h2 class="mt-1 text-3xl font-semibold text-slate-950">Compagnie</h2>
                 <p class="mt-1 text-sm text-slate-500">Compagnie disponibili per polizze e preventivi.</p>
             </div>
-            <input v-model="search" type="search" placeholder="Cerca compagnia" class="min-h-10 rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+                <input v-model="search" type="search" placeholder="Cerca compagnia" class="min-h-10 rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                <button type="button" class="min-h-10 rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" @click="openCreateForm">
+                    Crea nuova compagnia
+                </button>
+            </div>
         </header>
 
         <p v-if="error" class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ error }}</p>
 
-        <FormCard :title="editingId ? 'Modifica compagnia' : 'Nuova compagnia'" description="Il nome compagnia e obbligatorio.">
+        <FormCard v-if="showForm" :title="editingId ? 'Modifica compagnia' : 'Nuova compagnia'" description="Il nome compagnia e obbligatorio.">
             <form class="grid gap-4 md:grid-cols-2" @submit.prevent="submit">
                 <div>
                     <label class="text-sm font-medium text-slate-700">Nome compagnia</label>

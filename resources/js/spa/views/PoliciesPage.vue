@@ -16,11 +16,18 @@ const loading = ref(true);
 const saving = ref(false);
 const error = ref('');
 const editingId = ref(null);
+const showForm = ref(false);
 const form = reactive(emptyPolicyForm());
 
 const resetForm = () => {
     editingId.value = null;
+    showForm.value = false;
     Object.assign(form, emptyPolicyForm());
+};
+
+const openCreateForm = () => {
+    resetForm();
+    showForm.value = true;
 };
 
 const load = async () => {
@@ -61,6 +68,7 @@ const filteredPolicies = computed(() => {
 
 const edit = (policy) => {
     editingId.value = policy.id;
+    showForm.value = true;
     Object.assign(form, {
         client_id: policy.client_id ?? '',
         insurance_company_id: policy.insurance_company_id ?? '',
@@ -114,12 +122,17 @@ const remove = async (policy) => {
                 <h2 class="mt-1 text-3xl font-semibold text-slate-950">Polizze</h2>
                 <p class="mt-1 text-sm text-slate-500">Archivio polizze con relazioni Supabase.</p>
             </div>
-            <input v-model="search" type="search" placeholder="Cerca polizza" class="min-h-10 rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+                <input v-model="search" type="search" placeholder="Cerca polizza" class="min-h-10 rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                <button type="button" class="min-h-10 rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" @click="openCreateForm">
+                    Crea nuova polizza
+                </button>
+            </div>
         </header>
 
         <p v-if="error" class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ error }}</p>
 
-        <FormCard :title="editingId ? 'Modifica polizza' : 'Nuova polizza'" description="Cliente, compagnia, numero e date sono obbligatori.">
+        <FormCard v-if="showForm" :title="editingId ? 'Modifica polizza' : 'Nuova polizza'" description="Cliente, compagnia, numero e date sono obbligatori.">
             <form class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" @submit.prevent="submit">
                 <div>
                     <label class="text-sm font-medium text-slate-700">Cliente</label>

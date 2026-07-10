@@ -12,6 +12,7 @@ const loading = ref(true);
 const saving = ref(false);
 const error = ref('');
 const editingId = ref(null);
+const showForm = ref(false);
 
 const form = reactive({
     first_name: '',
@@ -26,6 +27,7 @@ const form = reactive({
 
 const resetForm = () => {
     editingId.value = null;
+    showForm.value = false;
     Object.assign(form, {
         first_name: '',
         last_name: '',
@@ -36,6 +38,11 @@ const resetForm = () => {
         city: '',
         notes: '',
     });
+};
+
+const openCreateForm = () => {
+    resetForm();
+    showForm.value = true;
 };
 
 const load = async () => {
@@ -69,6 +76,7 @@ const filteredClients = computed(() => {
 
 const edit = (client) => {
     editingId.value = client.id;
+    showForm.value = true;
     Object.assign(form, {
         first_name: client.first_name ?? '',
         last_name: client.last_name ?? '',
@@ -118,12 +126,17 @@ const remove = async (client) => {
                 <h2 class="mt-1 text-3xl font-semibold text-slate-950">Clienti</h2>
                 <p class="mt-1 text-sm text-slate-500">Gestione clienti su Supabase.</p>
             </div>
-            <input v-model="search" type="search" placeholder="Cerca cliente" class="min-h-10 rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+                <input v-model="search" type="search" placeholder="Cerca cliente" class="min-h-10 rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                <button type="button" class="min-h-10 rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" @click="openCreateForm">
+                    Crea nuovo cliente
+                </button>
+            </div>
         </header>
 
         <p v-if="error" class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ error }}</p>
 
-        <FormCard :title="editingId ? 'Modifica cliente' : 'Nuovo cliente'" description="Nome e cognome sono obbligatori. Gli altri dati aiutano reminder e ricerche.">
+        <FormCard v-if="showForm" :title="editingId ? 'Modifica cliente' : 'Nuovo cliente'" description="Nome e cognome sono obbligatori. Gli altri dati aiutano reminder e ricerche.">
             <form class="grid gap-4 md:grid-cols-2" @submit.prevent="submit">
                 <div>
                     <label class="text-sm font-medium text-slate-700">Nome</label>
