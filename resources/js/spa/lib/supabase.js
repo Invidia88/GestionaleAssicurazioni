@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const normalizedSupabaseUrl = supabaseUrl?.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
 
 export const hasSupabaseConfig = Boolean(supabaseUrl && supabaseAnonKey);
 
@@ -10,6 +11,6 @@ if (!hasSupabaseConfig) {
 }
 
 export const supabase = createClient(
-    supabaseUrl || 'https://placeholder.supabase.co',
+    normalizedSupabaseUrl || 'https://placeholder.supabase.co',
     supabaseAnonKey || 'placeholder-anon-key',
 );

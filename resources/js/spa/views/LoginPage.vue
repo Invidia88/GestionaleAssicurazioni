@@ -8,24 +8,46 @@ const email = ref('');
 const password = ref('');
 const loading = ref(false);
 const error = ref('');
+const debugMessage = ref('');
+
+const friendlyAuthError = (authError) => {
+    const message = authError?.message ?? '';
+
+    if (message.toLowerCase().includes('email not confirmed')) {
+        return 'Email non confermata. In Supabase vai in Authentication > Users, apri l’utente e conferma l’email oppure abilita Auto Confirm per lo staging.';
+    }
+
+    if (message.toLowerCase().includes('invalid login credentials')) {
+        return 'Email o password non corrette. Verifica di usare l’utente creato nello stesso progetto Supabase collegato a questa app.';
+    }
+
+    return message || 'Accesso non riuscito. Controlla utente, password e configurazione Supabase.';
+};
 
 const submit = async () => {
     loading.value = true;
     error.value = '';
+    debugMessage.value = '';
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
-        email: email.value,
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.value.trim().toLowerCase(),
         password: password.value,
     });
 
     loading.value = false;
 
     if (authError) {
-        error.value = 'Credenziali non valide o utente non configurato.';
+        error.value = friendlyAuthError(authError);
+        debugMessage.value = authError.message;
         return;
     }
 
-    await router.push('/');
+    if (!data.session) {
+        error.value = 'Login completato senza sessione valida. Controlla le impostazioni Auth del progetto Supabase.';
+        return;
+    }
+
+    await router.replace('/');
 };
 </script>
 
@@ -47,7 +69,10 @@ const submit = async () => {
                     <label class="text-sm font-medium text-slate-700">Password</label>
                     <input v-model="password" required type="password" class="mt-1 min-h-11 w-full rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                 </div>
-                <p v-if="error" class="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{{ error }}</p>
+                <div v-if="error" class="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                    <p>{{ error }}</p>
+                    <p v-if="debugMessage" class="mt-1 text-xs text-red-600">Dettaglio Supabase: {{ debugMessage }}</p>
+                </div>
                 <button type="submit" :disabled="loading" class="min-h-11 w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
                     {{ loading ? 'Accesso...' : 'Accedi' }}
                 </button>
