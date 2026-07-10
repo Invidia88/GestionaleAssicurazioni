@@ -3,7 +3,7 @@
 -- 2. Replace the UUID below with that user's id from auth.users.
 -- 3. Run in staging first, then repeat in production only if demo data is desired.
 
-select set_config('app.seed_user_id', '00000000-0000-0000-0000-000000000000', false);
+select set_config('app.seed_user_id', '6c930fac-e4fe-4444-b5f6-92b76cc31cd9', false);
 
 insert into public.profiles (id, name, email, role)
 values (
