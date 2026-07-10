@@ -2,6 +2,25 @@
 
 ## 2026-07-10
 
+- Convertito il target Vercel su `staging` da asset Laravel/Inertia a Vue SPA.
+- Aggiunto entrypoint `index.html` e configurazione Vite con output `dist`.
+- Aggiunto `vercel.json` con output directory `dist` e fallback verso `index.html`.
+- Aggiunti Vue Router e Supabase JS per autenticazione e query frontend.
+- Aggiunte pagine SPA per login, dashboard, clienti, compagnie, polizze, scadenziario e preventivi.
+- Collegato il flusso “Crea preventivo” alla tabella Supabase `quotes`.
+
+File principali modificati:
+
+- `index.html`
+- `vercel.json`
+- `vite.config.js`
+- `resources/js/spa/**`
+- `package.json`
+- `package-lock.json`
+- `.gitignore`
+
+## 2026-07-10
+
 - Preparata la base di migrazione verso Supabase + Vercel.
 - Aggiunte migration SQL Supabase per profili, clienti, compagnie, polizze e preventivi.
 - Aggiunte policy Row Level Security per isolare i dati per utente autenticato.

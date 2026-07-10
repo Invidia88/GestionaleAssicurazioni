@@ -17,6 +17,7 @@
 - Scadenziario evidenziato con riepiloghi, filtri e azioni rapide.
 - Flusso “Crea preventivo” per recupero cliente dopo 15 giorni dalla scadenza.
 - Preparazione migrazione Supabase con schema SQL, RLS, seed demo e guida deploy Vercel.
+- Conversione iniziale frontend su `staging` a Vue SPA con Supabase Auth, Vue Router e output Vercel `dist`.
 - Seeder demo con credenziali `admin@example.com` / `password`.
 - Documentazione iniziale.
 
@@ -24,10 +25,9 @@
 
 - Creare i progetti Supabase `gestionale-assicurazioni-staging` e `gestionale-assicurazioni-production`.
 - Eseguire migration e RLS Supabase nei due ambienti.
-- Installare `@supabase/supabase-js` e configurare il client frontend.
-- Introdurre Vue Router per sostituire la navigazione Inertia.
-- Convertire autenticazione Laravel/Breeze in Supabase Auth.
-- Convertire dashboard, clienti, compagnie, polizze, scadenziario e preventivi da controller Inertia a query Supabase.
+- Testare in staging tutte le query Supabase con dati reali e RLS attivo.
+- Rifinire validazioni e messaggi errore della SPA.
+- Aggiungere modifica completa dei preventivi, non solo creazione/eliminazione.
 - Configurare Vercel con variabili ambiente separate per staging e production.
 - Definire policy di backup database prima di usare dati reali in produzione.
 - Valutare disabilitazione registrazione pubblica se l'agenzia vuole creare utenti solo manualmente.

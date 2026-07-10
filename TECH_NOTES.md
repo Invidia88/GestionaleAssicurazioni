@@ -66,14 +66,17 @@ La cartella `supabase/` prepara il passaggio da Laravel + Inertia a Supabase + V
 
 Il modello dati Supabase introduce una tabella `quotes` dedicata. Questo prepara uno storico separato dei preventivi, mentre l'app Laravel attuale continua a usare il form polizza in modalita preventivo per non stravolgere la logica esistente.
 
-Nota importante: l'app attuale non e ancora una SPA pura. Laravel renderizza le pagine tramite Inertia e gestisce auth, validazione e redirect. Per usare Vercel come frontend reale serve uno step successivo di conversione:
+Su `staging` e stata aggiunta una SPA Vue dedicata in `resources/js/spa`. Vercel usa `index.html`, `vite.config.js` e `vercel.json` per generare e servire `dist`.
 
-- installare `@supabase/supabase-js`;
-- aggiungere un client Supabase condiviso;
-- introdurre Vue Router;
-- sostituire le props Inertia con query Supabase;
-- spostare login/logout su Supabase Auth;
-- cambiare output Vercel da build Laravel a `dist`.
+La SPA usa:
+
+- `@supabase/supabase-js` per autenticazione e query;
+- `vue-router` per navigazione client-side;
+- `resources/js/spa/lib/api.js` come layer dati minimo;
+- `resources/js/spa/lib/domain.js` per formati, stati, WhatsApp e regole preventivo;
+- `resources/js/spa/components/QuoteRecoveryButton.vue` per creare preventivi da polizze scadute.
+
+Laravel/Inertia resta nel repository come base precedente. La build Vercel pero ora punta alla SPA e non richiede runtime PHP.
 
 ## Struttura UI
 
