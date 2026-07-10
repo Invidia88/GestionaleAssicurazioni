@@ -54,6 +54,27 @@ Il componente `CreateQuoteButton`:
 
 Il form polizza usa la prop `mode = quote` per cambiare titolo, descrizione e valori iniziali. Il modulo resta basato sulle polizze esistenti per non introdurre un nuovo dominio dati prima che sia necessario.
 
+## Migrazione Supabase e Vercel
+
+La cartella `supabase/` prepara il passaggio da Laravel + Inertia a Supabase + Vue SPA:
+
+- `supabase/migrations/202607100001_init_schema.sql` definisce schema Postgres, tipi enum, indici, trigger e funzione helper per i preventivi di recupero.
+- `supabase/migrations/202607100002_rls_policies.sql` abilita Row Level Security su tutte le tabelle business.
+- `supabase/seed.sql` contiene dati demo minimi da usare in staging dopo aver creato un utente Supabase Auth.
+- `.env.supabase.example` documenta le variabili frontend da inserire in Vercel.
+- `DEPLOYMENT.md` descrive setup staging/production e note sul piano free.
+
+Il modello dati Supabase introduce una tabella `quotes` dedicata. Questo prepara uno storico separato dei preventivi, mentre l'app Laravel attuale continua a usare il form polizza in modalita preventivo per non stravolgere la logica esistente.
+
+Nota importante: l'app attuale non e ancora una SPA pura. Laravel renderizza le pagine tramite Inertia e gestisce auth, validazione e redirect. Per usare Vercel come frontend reale serve uno step successivo di conversione:
+
+- installare `@supabase/supabase-js`;
+- aggiungere un client Supabase condiviso;
+- introdurre Vue Router;
+- sostituire le props Inertia con query Supabase;
+- spostare login/logout su Supabase Auth;
+- cambiare output Vercel da build Laravel a `dist`.
+
 ## Struttura UI
 
 La UI Vue e organizzata con componenti riutilizzabili:
@@ -81,3 +102,4 @@ Le pagine elenco usano tabelle su desktop e card dedicate su mobile, cosi il con
 - Storico rinnovi collegato alla polizza precedente.
 - Audit log delle modifiche.
 - Aggiungere test visuali end-to-end per desktop e mobile.
+- Completare conversione frontend a Vue SPA con Supabase Auth e Supabase Postgres.

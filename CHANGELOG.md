@@ -2,6 +2,26 @@
 
 ## 2026-07-10
 
+- Preparata la base di migrazione verso Supabase + Vercel.
+- Aggiunte migration SQL Supabase per profili, clienti, compagnie, polizze e preventivi.
+- Aggiunte policy Row Level Security per isolare i dati per utente autenticato.
+- Aggiunto seed demo Supabase per ambiente staging.
+- Aggiunta configurazione esempio `.env.supabase.example`.
+- Aggiunta guida `DEPLOYMENT.md` per ambienti staging/production su Supabase e frontend su Vercel.
+
+File principali modificati:
+
+- `supabase/migrations/202607100001_init_schema.sql`
+- `supabase/migrations/202607100002_rls_policies.sql`
+- `supabase/seed.sql`
+- `supabase/README.md`
+- `.env.supabase.example`
+- `DEPLOYMENT.md`
+- `TECH_NOTES.md`
+- `TODO.md`
+
+## 2026-07-10
+
 - Aggiunto flusso “Crea preventivo” per recupero clienti dopo la finestra di rinnovo di 15 giorni.
 - Le polizze non rinnovate mostrano il bottone preventivo quando sono scadute da almeno 15 giorni.
 - Il bottone apre una scelta compagnia e collega alla scheda della compagnia selezionata con pannello dedicato al preventivo.

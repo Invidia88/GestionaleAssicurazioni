@@ -16,16 +16,23 @@
 - Tabelle desktop e card mobile per gli elenchi principali.
 - Scadenziario evidenziato con riepiloghi, filtri e azioni rapide.
 - Flusso “Crea preventivo” per recupero cliente dopo 15 giorni dalla scadenza.
+- Preparazione migrazione Supabase con schema SQL, RLS, seed demo e guida deploy Vercel.
 - Seeder demo con credenziali `admin@example.com` / `password`.
 - Documentazione iniziale.
 
 ## Ancora da fare
 
-- Collegare un database MySQL reale nell'ambiente di produzione.
-- Definire eventuali policy di backup database.
+- Creare i progetti Supabase `gestionale-assicurazioni-staging` e `gestionale-assicurazioni-production`.
+- Eseguire migration e RLS Supabase nei due ambienti.
+- Installare `@supabase/supabase-js` e configurare il client frontend.
+- Introdurre Vue Router per sostituire la navigazione Inertia.
+- Convertire autenticazione Laravel/Breeze in Supabase Auth.
+- Convertire dashboard, clienti, compagnie, polizze, scadenziario e preventivi da controller Inertia a query Supabase.
+- Configurare Vercel con variabili ambiente separate per staging e production.
+- Definire policy di backup database prima di usare dati reali in produzione.
 - Valutare disabilitazione registrazione pubblica se l'agenzia vuole creare utenti solo manualmente.
 - Verificare con utenti reali se i filtri dello scadenziario coprono tutti i casi operativi.
-- Valutare se creare una tabella `quotes` dedicata se i preventivi devono avere storico separato dalle polizze.
+- Collegare la tabella Supabase `quotes` al flusso preventivi quando il frontend sara convertito a SPA.
 
 ## Idee future
 
