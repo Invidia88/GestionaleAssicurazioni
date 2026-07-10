@@ -7,6 +7,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 
 const props = defineProps({
     company: Object,
+    quoteContext: Object,
 });
 
 const formatDate = (date) => new Intl.DateTimeFormat('it-IT').format(new Date(date));
@@ -40,6 +41,30 @@ const destroyCompany = () => {
                 </div>
             </div>
         </template>
+
+        <section v-if="quoteContext" class="mb-6 rounded border border-blue-200 bg-blue-50 p-5 shadow-sm">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-blue-700">Preventivo recupero cliente</p>
+                    <h2 class="mt-1 text-lg font-semibold text-slate-950">
+                        {{ quoteContext.client.full_name }} con {{ company.name }}
+                    </h2>
+                    <p class="mt-2 text-sm text-slate-700">
+                        Partenza da polizza {{ quoteContext.sourcePolicy.number }} scaduta il
+                        {{ formatDate(quoteContext.sourcePolicy.end_date) }}. Il modulo sara precompilato per proporre una nuova offerta l'anno successivo.
+                    </p>
+                </div>
+                <Link
+                    :href="route('policies.create', {
+                        source_policy_id: quoteContext.sourcePolicy.id,
+                        insurance_company_id: company.id,
+                    })"
+                    class="inline-flex min-h-10 items-center justify-center rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                    Crea preventivo
+                </Link>
+            </div>
+        </section>
 
         <div class="grid gap-6 xl:grid-cols-3">
             <section class="rounded border border-slate-200 bg-white p-5 xl:col-span-1">

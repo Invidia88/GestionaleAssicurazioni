@@ -7,6 +7,12 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     policy: Object,
+    prefill: Object,
+    mode: {
+        type: String,
+        default: 'policy',
+    },
+    sourcePolicy: Object,
     clients: Array,
     companies: Array,
     options: Object,
@@ -14,16 +20,17 @@ const props = defineProps({
 
 const dateOnly = (value) => value ? String(value).slice(0, 10) : '';
 const isEdit = Boolean(props.policy);
+const isQuote = props.mode === 'quote';
 const form = useForm({
-    client_id: props.policy?.client_id ?? '',
-    insurance_company_id: props.policy?.insurance_company_id ?? '',
-    type: props.policy?.type ?? 'Auto',
-    number: props.policy?.number ?? '',
-    start_date: dateOnly(props.policy?.start_date),
-    end_date: dateOnly(props.policy?.end_date),
-    annual_premium: props.policy?.annual_premium ?? '',
-    status: props.policy?.status ?? 'attiva',
-    notes: props.policy?.notes ?? '',
+    client_id: props.policy?.client_id ?? props.prefill?.client_id ?? '',
+    insurance_company_id: props.policy?.insurance_company_id ?? props.prefill?.insurance_company_id ?? '',
+    type: props.policy?.type ?? props.prefill?.type ?? 'Auto',
+    number: props.policy?.number ?? props.prefill?.number ?? '',
+    start_date: dateOnly(props.policy?.start_date ?? props.prefill?.start_date),
+    end_date: dateOnly(props.policy?.end_date ?? props.prefill?.end_date),
+    annual_premium: props.policy?.annual_premium ?? props.prefill?.annual_premium ?? '',
+    status: props.policy?.status ?? props.prefill?.status ?? 'attiva',
+    notes: props.policy?.notes ?? props.prefill?.notes ?? '',
 });
 
 const submit = () => {
@@ -37,19 +44,28 @@ const submit = () => {
 </script>
 
 <template>
-    <Head :title="isEdit ? 'Modifica polizza' : 'Nuova polizza'" />
+    <Head :title="isEdit ? 'Modifica polizza' : isQuote ? 'Nuovo preventivo' : 'Nuova polizza'" />
 
     <AuthenticatedLayout>
-        <template #title>{{ isEdit ? 'Modifica polizza' : 'Nuova polizza' }}</template>
+        <template #title>{{ isEdit ? 'Modifica polizza' : isQuote ? 'Nuovo preventivo' : 'Nuova polizza' }}</template>
 
         <template #header>
             <div>
-                <h1 class="text-2xl font-semibold text-slate-950">{{ isEdit ? 'Modifica polizza' : 'Nuova polizza' }}</h1>
-                <p class="mt-1 text-sm text-slate-500">Collega cliente, compagnia, premio e scadenza.</p>
+                <h1 class="text-2xl font-semibold text-slate-950">{{ isEdit ? 'Modifica polizza' : isQuote ? 'Nuovo preventivo' : 'Nuova polizza' }}</h1>
+                <p class="mt-1 text-sm text-slate-500">
+                    {{ isQuote ? 'Proposta di recupero cliente basata su una polizza scaduta.' : 'Collega cliente, compagnia, premio e scadenza.' }}
+                </p>
             </div>
         </template>
 
-        <FormCard title="Dati polizza" description="Mantieni aggiornate scadenza, premio, stato e riferimenti.">
+        <div v-if="isQuote && sourcePolicy" class="mb-5 rounded border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+            <p class="font-semibold">Preventivo da recupero cliente</p>
+            <p class="mt-1">
+                Origine: polizza {{ sourcePolicy.number }} scaduta il {{ new Intl.DateTimeFormat('it-IT').format(new Date(sourcePolicy.end_date)) }}.
+            </p>
+        </div>
+
+        <FormCard :title="isQuote ? 'Dati preventivo' : 'Dati polizza'" :description="isQuote ? 'Verifica compagnia, date e premio prima di salvare la proposta.' : 'Mantieni aggiornate scadenza, premio, stato e riferimenti.'">
             <form @submit.prevent="submit">
             <div class="grid gap-4 md:grid-cols-2">
                 <div>
@@ -80,7 +96,7 @@ const submit = () => {
                     <InputError :message="form.errors.type" class="mt-2" />
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-slate-700">Numero polizza</label>
+                    <label class="text-sm font-medium text-slate-700">{{ isQuote ? 'Numero preventivo' : 'Numero polizza' }}</label>
                     <input v-model="form.number" type="text" class="mt-1 w-full rounded border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                     <InputError :message="form.errors.number" class="mt-2" />
                 </div>
@@ -118,7 +134,7 @@ const submit = () => {
                     Annulla
                 </Link>
                 <PrimaryButton type="submit" :disabled="form.processing" class="w-full sm:w-auto">
-                    Salva
+                    {{ isQuote ? 'Salva preventivo' : 'Salva' }}
                 </PrimaryButton>
             </div>
         </form>

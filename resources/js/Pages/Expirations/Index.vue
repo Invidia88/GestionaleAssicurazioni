@@ -5,6 +5,7 @@ import StatCard from '@/Components/StatCard.vue';
 import DataTableWrapper from '@/Components/DataTableWrapper.vue';
 import EmptyState from '@/Components/EmptyState.vue';
 import WhatsAppButton from '@/Components/WhatsAppButton.vue';
+import CreateQuoteButton from '@/Components/CreateQuoteButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -162,6 +163,7 @@ const rowClass = (policy) => {
                             <td class="px-4 py-3 text-right">
                                 <div class="flex justify-end gap-2">
                                     <WhatsAppButton :href="policy.whatsapp_url" />
+                                    <CreateQuoteButton :policy="policy" :companies="companies" />
                                     <Link :href="route('policies.show', policy.id)" class="inline-flex min-h-10 items-center rounded border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Apri</Link>
                                 </div>
                             </td>
@@ -198,6 +200,7 @@ const rowClass = (policy) => {
                 </div>
                 <div class="mt-4 grid gap-2 sm:grid-cols-2">
                     <WhatsAppButton :href="policy.whatsapp_url" />
+                    <CreateQuoteButton :policy="policy" :companies="companies" />
                     <Link :href="route('policies.show', policy.id)" class="inline-flex min-h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
                         Apri polizza
                     </Link>

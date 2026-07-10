@@ -40,13 +40,63 @@ class PolicyController extends Controller
             'filters' => [
                 'search' => $search,
             ],
+            'companies' => InsuranceCompany::query()
+                ->orderBy('name')
+                ->get(['id', 'name']),
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        $sourcePolicy = null;
+        $prefill = [
+            'client_id' => $request->integer('client_id') ?: '',
+            'insurance_company_id' => $request->integer('insurance_company_id') ?: '',
+            'type' => $request->string('type')->toString() ?: 'Auto',
+            'number' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'annual_premium' => '',
+            'status' => 'attiva',
+            'notes' => '',
+        ];
+
+        if ($request->filled('source_policy_id')) {
+            $sourcePolicy = Policy::query()
+                ->with(['client', 'insuranceCompany'])
+                ->find($request->integer('source_policy_id'));
+
+            if ($sourcePolicy && $sourcePolicy->can_create_quote) {
+                $startDate = $sourcePolicy->end_date?->copy()->addYear();
+                $endDate = $sourcePolicy->end_date?->copy()->addYears(2);
+
+                $prefill = [
+                    ...$prefill,
+                    'client_id' => $sourcePolicy->client_id,
+                    'insurance_company_id' => $request->integer('insurance_company_id') ?: '',
+                    'type' => $sourcePolicy->type,
+                    'number' => 'PREV-'.now()->format('YmdHis').'-'.$sourcePolicy->id,
+                    'start_date' => $startDate?->toDateString() ?? '',
+                    'end_date' => $endDate?->toDateString() ?? '',
+                    'annual_premium' => '',
+                    'status' => 'attiva',
+                    'notes' => sprintf(
+                        'Preventivo recupero cliente da polizza %s scaduta il %s. Compagnia precedente: %s.',
+                        $sourcePolicy->number,
+                        $sourcePolicy->end_date?->format('d/m/Y'),
+                        $sourcePolicy->insuranceCompany?->name,
+                    ),
+                ];
+            } else {
+                $sourcePolicy = null;
+            }
+        }
+
         return Inertia::render('Policies/Form', [
             'policy' => null,
+            'prefill' => $prefill,
+            'mode' => $sourcePolicy ? 'quote' : 'policy',
+            'sourcePolicy' => $sourcePolicy,
             ...$this->formOptions(),
         ]);
     }
@@ -66,6 +116,9 @@ class PolicyController extends Controller
 
         return Inertia::render('Policies/Show', [
             'policy' => $policy,
+            'companies' => InsuranceCompany::query()
+                ->orderBy('name')
+                ->get(['id', 'name']),
         ]);
     }
 

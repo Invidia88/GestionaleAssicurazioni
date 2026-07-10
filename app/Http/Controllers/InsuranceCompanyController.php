@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInsuranceCompanyRequest;
 use App\Http\Requests\UpdateInsuranceCompanyRequest;
 use App\Models\InsuranceCompany;
+use App\Models\Policy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -53,12 +54,28 @@ class InsuranceCompanyController extends Controller
             ->with('success', 'Compagnia creata correttamente.');
     }
 
-    public function show(InsuranceCompany $insuranceCompany): Response
+    public function show(Request $request, InsuranceCompany $insuranceCompany): Response
     {
         $insuranceCompany->load(['policies' => fn ($query) => $query->with('client')->orderByDesc('end_date')]);
 
+        $sourcePolicy = null;
+
+        if ($request->filled('quote_policy_id')) {
+            $sourcePolicy = Policy::query()
+                ->with(['client', 'insuranceCompany'])
+                ->find($request->integer('quote_policy_id'));
+        }
+
+        if ($sourcePolicy && ! $sourcePolicy->can_create_quote) {
+            $sourcePolicy = null;
+        }
+
         return Inertia::render('Companies/Show', [
             'company' => $insuranceCompany,
+            'quoteContext' => $sourcePolicy ? [
+                'sourcePolicy' => $sourcePolicy,
+                'client' => $sourcePolicy->client,
+            ] : null,
         ]);
     }
 

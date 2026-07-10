@@ -2,11 +2,13 @@
 import StatusBadge from '@/Components/StatusBadge.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import WhatsAppButton from '@/Components/WhatsAppButton.vue';
+import CreateQuoteButton from '@/Components/CreateQuoteButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
 const props = defineProps({
     policy: Object,
+    companies: Array,
 });
 
 const formatDate = (date) => new Intl.DateTimeFormat('it-IT').format(new Date(date));
@@ -36,6 +38,7 @@ const destroyPolicy = () => {
                 </div>
                 <div class="grid gap-2 sm:flex sm:flex-wrap">
                     <WhatsAppButton :href="policy.whatsapp_url" />
+                    <CreateQuoteButton :policy="policy" :companies="companies" />
                     <Link :href="route('policies.edit', policy.id)" class="inline-flex min-h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
                         Modifica
                     </Link>
@@ -71,6 +74,16 @@ const destroyPolicy = () => {
                 <p v-else class="mt-4 rounded bg-amber-50 px-3 py-2 text-sm text-amber-800">
                     Inserisci un telefono cliente per abilitare WhatsApp.
                 </p>
+            </aside>
+
+            <aside v-if="policy.can_create_quote" class="rounded border border-blue-200 bg-blue-50 p-5">
+                <h2 class="font-semibold text-slate-950">Recupero cliente</h2>
+                <p class="mt-3 text-sm text-slate-700">
+                    La finestra di rinnovo di 15 giorni e terminata. Puoi provare a recuperare il cliente con un nuovo preventivo per l'anno successivo.
+                </p>
+                <div class="mt-4">
+                    <CreateQuoteButton :policy="policy" :companies="companies" />
+                </div>
             </aside>
         </div>
     </AuthenticatedLayout>

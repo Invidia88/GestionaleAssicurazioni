@@ -51,6 +51,8 @@ class Policy extends Model
     protected $appends = [
         'status_label',
         'whatsapp_url',
+        'can_create_quote',
+        'quote_available_from',
     ];
 
     public function client(): BelongsTo
@@ -94,6 +96,22 @@ class Policy extends Model
 
                 return 'https://wa.me/'.$phone.'?text='.rawurlencode($message);
             },
+        );
+    }
+
+    protected function canCreateQuote(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->end_date
+                ? $this->status !== 'rinnovata' && $this->end_date->copy()->addDays(15)->lte(today())
+                : false,
+        );
+    }
+
+    protected function quoteAvailableFrom(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->end_date?->copy()->addDays(15)->toDateString(),
         );
     }
 

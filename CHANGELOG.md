@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-07-10
+
+- Aggiunto flusso “Crea preventivo” per recupero clienti dopo la finestra di rinnovo di 15 giorni.
+- Le polizze non rinnovate mostrano il bottone preventivo quando sono scadute da almeno 15 giorni.
+- Il bottone apre una scelta compagnia e collega alla scheda della compagnia selezionata con pannello dedicato al preventivo.
+- Il form polizza supporta la modalità preventivo con cliente, compagnia, tipo, date e note precompilate dalla polizza scaduta.
+
+File principali modificati:
+
+- `app/Models/Policy.php`
+- `app/Http/Controllers/PolicyController.php`
+- `app/Http/Controllers/InsuranceCompanyController.php`
+- `resources/js/Components/CreateQuoteButton.vue`
+- `resources/js/Pages/Policies/Index.vue`
+- `resources/js/Pages/Policies/Show.vue`
+- `resources/js/Pages/Policies/Form.vue`
+- `resources/js/Pages/Expirations/Index.vue`
+- `resources/js/Pages/Companies/Show.vue`
+
 ## 2026-07-08
 
 - Rifatta in modo piu completo la UI/UX del gestionale con impostazione CRM/SaaS professionale.

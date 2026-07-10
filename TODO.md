@@ -15,6 +15,7 @@
 - UI/UX CRM moderna con componenti riutilizzabili.
 - Tabelle desktop e card mobile per gli elenchi principali.
 - Scadenziario evidenziato con riepiloghi, filtri e azioni rapide.
+- Flusso “Crea preventivo” per recupero cliente dopo 15 giorni dalla scadenza.
 - Seeder demo con credenziali `admin@example.com` / `password`.
 - Documentazione iniziale.
 
@@ -24,6 +25,7 @@
 - Definire eventuali policy di backup database.
 - Valutare disabilitazione registrazione pubblica se l'agenzia vuole creare utenti solo manualmente.
 - Verificare con utenti reali se i filtri dello scadenziario coprono tutti i casi operativi.
+- Valutare se creare una tabella `quotes` dedicata se i preventivi devono avere storico separato dalle polizze.
 
 ## Idee future
 
@@ -32,6 +34,7 @@
 - Allegati documentali.
 - Notifiche automatiche.
 - Storico rinnovi.
+- Pipeline recupero clienti con stati “da contattare”, “preventivo inviato”, “perso”, “recuperato”.
 - Tema chiaro/scuro opzionale.
 - Test browser automatici sulle principali risoluzioni mobile.
 
