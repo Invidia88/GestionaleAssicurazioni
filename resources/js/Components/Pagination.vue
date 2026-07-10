@@ -20,7 +20,7 @@ defineProps({
             :class="[
                 'rounded border px-3 py-2 text-sm',
                 link.active
-                    ? 'border-emerald-700 bg-emerald-700 text-white'
+                    ? 'border-blue-600 bg-blue-600 text-white'
                     : link.url
                       ? 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                       : 'border-slate-100 bg-slate-100 text-slate-400',

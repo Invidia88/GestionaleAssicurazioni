@@ -2,7 +2,7 @@
     <div class="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4 py-10">
         <div class="w-full max-w-md">
             <div class="mb-6 text-center">
-                <div class="mx-auto grid h-14 w-14 place-items-center rounded bg-slate-950 text-base font-bold text-white shadow-sm">
+                <div class="mx-auto grid h-14 w-14 place-items-center rounded bg-blue-600 text-base font-bold text-white shadow-sm">
                     GA
                 </div>
                 <h1 class="mt-4 text-2xl font-semibold text-slate-950">Gestionale Assicurazioni</h1>

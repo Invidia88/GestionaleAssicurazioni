@@ -40,6 +40,23 @@ Il model `Policy` espone l'attributo `whatsapp_url`. Il telefono del cliente vie
 
 Il link e disponibile solo quando la polizza viene caricata con cliente e compagnia e il cliente ha un telefono.
 
+## Struttura UI
+
+La UI Vue e organizzata con componenti riutilizzabili:
+
+- `AuthenticatedLayout` gestisce lo scheletro delle pagine protette.
+- `AppLayout` e un alias semantico del layout admin.
+- `Sidebar` contiene navigazione desktop, logo e informazioni utente.
+- `Topbar` contiene titolo pagina, menu mobile, flash message e menu utente.
+- `StatCard` standardizza le card statistiche della dashboard e dello scadenziario.
+- `StatusBadge` centralizza i colori degli stati polizza.
+- `DataTableWrapper` applica contenitore, bordo, ombra e scroll orizzontale alle tabelle desktop.
+- `EmptyState` mostra stati vuoti coerenti e piu chiari.
+- `FormCard` incornicia i form con titolo, descrizione e padding uniforme.
+- `WhatsAppButton` centralizza il bottone verde per i promemoria.
+
+Le pagine elenco usano tabelle su desktop e card dedicate su mobile, cosi il contenuto resta leggibile senza uscire dallo schermo. I form usano griglie responsive: due colonne su desktop e colonna singola su smartphone.
+
 ## Miglioramenti futuri
 
 - Ruoli distinti admin/operatore con permessi separati.
@@ -48,3 +65,4 @@ Il link e disponibile solo quando la polizza viene caricata con cliente e compag
 - Allegati PDF per documenti polizza.
 - Storico rinnovi collegato alla polizza precedente.
 - Audit log delle modifiche.
+- Aggiungere test visuali end-to-end per desktop e mobile.

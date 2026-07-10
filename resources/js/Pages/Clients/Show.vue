@@ -1,5 +1,7 @@
 <script setup>
 import StatusBadge from '@/Components/StatusBadge.vue';
+import EmptyState from '@/Components/EmptyState.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
@@ -28,13 +30,13 @@ const destroyClient = () => {
                     <h1 class="text-2xl font-semibold text-slate-950">{{ client.full_name }}</h1>
                     <p class="mt-1 text-sm text-slate-500">{{ client.tax_code || 'Codice fiscale non indicato' }}</p>
                 </div>
-                <div class="flex gap-2">
-                    <Link :href="route('clients.edit', client.id)" class="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                <div class="flex flex-col gap-2 sm:flex-row">
+                    <Link :href="route('clients.edit', client.id)" class="inline-flex min-h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
                         Modifica
                     </Link>
-                    <button @click="destroyClient" type="button" class="rounded bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800">
+                    <DangerButton @click="destroyClient" type="button">
                         Elimina
-                    </button>
+                    </DangerButton>
                 </div>
             </div>
         </template>
@@ -54,14 +56,14 @@ const destroyClient = () => {
             <section class="rounded border border-slate-200 bg-white xl:col-span-2">
                 <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
                     <h2 class="font-semibold text-slate-950">Polizze associate</h2>
-                    <Link :href="route('policies.create')" class="text-sm font-semibold text-emerald-700">Nuova polizza</Link>
+                    <Link :href="route('policies.create')" class="text-sm font-semibold text-blue-700">Nuova polizza</Link>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-slate-200">
                         <tbody class="divide-y divide-slate-100">
                             <tr v-for="policy in client.policies" :key="policy.id">
                                 <td class="px-4 py-3">
-                                    <Link :href="route('policies.show', policy.id)" class="font-medium text-slate-950 hover:text-emerald-700">
+                                    <Link :href="route('policies.show', policy.id)" class="font-medium text-slate-950 hover:text-blue-700">
                                         {{ policy.number }}
                                     </Link>
                                     <p class="text-sm text-slate-500">{{ policy.type }} - {{ policy.insurance_company.name }}</p>
@@ -70,7 +72,9 @@ const destroyClient = () => {
                                 <td class="px-4 py-3"><StatusBadge :status="policy.status" :label="policy.status_label" /></td>
                             </tr>
                             <tr v-if="client.policies.length === 0">
-                                <td class="px-4 py-8 text-center text-sm text-slate-500">Nessuna polizza associata.</td>
+                                <td class="px-4 py-8">
+                                    <EmptyState title="Nessuna polizza associata" description="Aggiungi una nuova polizza per questo cliente." />
+                                </td>
                             </tr>
                         </tbody>
                     </table>

@@ -1,5 +1,7 @@
 <script setup>
 import StatusBadge from '@/Components/StatusBadge.vue';
+import EmptyState from '@/Components/EmptyState.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
@@ -28,13 +30,13 @@ const destroyCompany = () => {
                     <h1 class="text-2xl font-semibold text-slate-950">{{ company.name }}</h1>
                     <p class="mt-1 text-sm text-slate-500">{{ company.contact_name || 'Referente non indicato' }}</p>
                 </div>
-                <div class="flex gap-2">
-                    <Link :href="route('insurance-companies.edit', company.id)" class="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                <div class="flex flex-col gap-2 sm:flex-row">
+                    <Link :href="route('insurance-companies.edit', company.id)" class="inline-flex min-h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
                         Modifica
                     </Link>
-                    <button @click="destroyCompany" type="button" class="rounded bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800">
+                    <DangerButton @click="destroyCompany" type="button">
                         Elimina
-                    </button>
+                    </DangerButton>
                 </div>
             </div>
         </template>
@@ -59,7 +61,7 @@ const destroyCompany = () => {
                         <tbody class="divide-y divide-slate-100">
                             <tr v-for="policy in company.policies" :key="policy.id">
                                 <td class="px-4 py-3">
-                                    <Link :href="route('policies.show', policy.id)" class="font-medium text-slate-950 hover:text-emerald-700">
+                                    <Link :href="route('policies.show', policy.id)" class="font-medium text-slate-950 hover:text-blue-700">
                                         {{ policy.number }}
                                     </Link>
                                     <p class="text-sm text-slate-500">{{ policy.type }} - {{ policy.client.full_name }}</p>
@@ -68,7 +70,9 @@ const destroyCompany = () => {
                                 <td class="px-4 py-3"><StatusBadge :status="policy.status" :label="policy.status_label" /></td>
                             </tr>
                             <tr v-if="company.policies.length === 0">
-                                <td class="px-4 py-8 text-center text-sm text-slate-500">Nessuna polizza associata.</td>
+                                <td class="px-4 py-8">
+                                    <EmptyState title="Nessuna polizza associata" description="Le polizze della compagnia appariranno qui." />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
