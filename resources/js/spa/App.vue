@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { supabase } from './lib/supabase.js';
+import { hasSupabaseConfig, supabase } from './lib/supabase.js';
 
 const router = useRouter();
 const route = useRoute();
@@ -19,6 +19,10 @@ const navigation = [
 ];
 
 onMounted(async () => {
+    if (!hasSupabaseConfig) {
+        return;
+    }
+
     const { data } = await supabase.auth.getSession();
     session.value = data.session;
 
@@ -36,7 +40,21 @@ const signOut = async () => {
 </script>
 
 <template>
-    <RouterView v-if="route.meta.guest" />
+    <main v-if="!hasSupabaseConfig" class="grid min-h-screen place-items-center bg-[#f5f7fb] px-4 py-10">
+        <section class="w-full max-w-xl rounded border border-amber-200 bg-white p-6 shadow-sm shadow-slate-200/70">
+            <div class="grid h-12 w-12 place-items-center rounded bg-amber-100 text-sm font-bold text-amber-800">CFG</div>
+            <h1 class="mt-5 text-2xl font-semibold text-slate-950">Configurazione Supabase mancante</h1>
+            <p class="mt-2 text-sm text-slate-600">
+                Aggiungi le variabili ambiente Supabase e riavvia il server di sviluppo.
+            </p>
+            <pre class="mt-4 overflow-x-auto rounded bg-slate-950 p-4 text-xs text-slate-100">VITE_SUPABASE_URL=https://xxxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=xxxxx
+VITE_APP_ENV=staging
+VITE_APP_NAME=Gestionale Assicurazioni</pre>
+        </section>
+    </main>
+
+    <RouterView v-else-if="route.meta.guest" />
 
     <div v-else class="modern-shell min-h-screen bg-[#f5f7fb] text-slate-900">
         <aside class="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-slate-950 px-4 py-5 text-white lg:block">

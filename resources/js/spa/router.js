@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { supabase } from './lib/supabase.js';
+import { hasSupabaseConfig, supabase } from './lib/supabase.js';
 import LoginPage from './views/LoginPage.vue';
 import DashboardPage from './views/DashboardPage.vue';
 import ClientsPage from './views/ClientsPage.vue';
@@ -23,6 +23,10 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
+    if (!hasSupabaseConfig) {
+        return true;
+    }
+
     const { data } = await supabase.auth.getSession();
 
     if (!data.session && !to.meta.guest) {
